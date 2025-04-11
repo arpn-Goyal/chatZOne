@@ -20,12 +20,10 @@ const Login = () => {
     const { email, password } = formData;
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
-        email,
-        password,
-      });
-
-      localStorage.setItem("token", res.data.token);
+      const res = await axios.post("http://localhost:5000/api/auth/login", 
+        {email, password},
+        { withCredentials: true }  // 🚀 Send & receive cookies!
+      );
       
       console.log(res);
       console.log(res.data);
