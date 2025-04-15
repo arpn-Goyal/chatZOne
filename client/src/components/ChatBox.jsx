@@ -1,12 +1,19 @@
 import React from "react";
 import ChatHeader from "./ChatHeader";
+import { useUser } from "../context/UserContext.jsx";
 
-const ChatBox = ({ selectedUser, user }) => {
-  if (!user) return <div className="flex-1 p-4">Select a user to start chatting</div>;
-  
+const ChatBox = ({ user: chat }) => {
+  const { user } = useUser();
+
+  // console.log(`Passed Chat user: ${chat}`);
+  if (!chat)
+    return <div className="flex-1 p-4">Select a user to start chatting</div>;
+
+  const otherUser = chat?.users?.find((u) => u._id !== user._id);
+  // console.log(`othereusers: ${otherUser}`);
   return (
     <div className="flex flex-col h-full">
-      <ChatHeader selectedUser={user} />
+      <ChatHeader selectedUser={otherUser} />
 
       {/* Chat messages */}
       <div className="flex-1 p-4 space-y-2 overflow-y-auto">

@@ -8,6 +8,7 @@ const Chat = () => {
   const [activeChat, setActiveChat] = useState(null);
 
   const handleChatClick = (user) => {
+    // console.log(`ChatUser Clicked: ${user}`);
     setActiveChat(user); // this user will be used in ChatBox component
   };
 

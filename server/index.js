@@ -6,8 +6,8 @@ import cookieParser from 'cookie-parser';
 
 // import routes
 import authRoutes from './routes/authRoutes.js';
-import chatRoutes from './routes/chatRoutes.js'; // assuming this is your protected route
 import userRoutes from './routes/userRoutes.js';
+import chatRoutes from "./routes/chatRoutes.js"; // ✅ new
 
 // config
 // Loads .env file contents into process.env by default. 
@@ -32,6 +32,7 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api', chatRoutes); 
 app.use('/api/users', userRoutes);
+app.use('/api/chat', chatRoutes);
 
 // server
 app.listen(PORT, () => {

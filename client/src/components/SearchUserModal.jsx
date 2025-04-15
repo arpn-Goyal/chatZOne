@@ -13,8 +13,8 @@ const SearchUserModal = ({ onClose, onUserSelect }) => {
       });
 
       console.log("UserSearch Btn is being clicked");
-      console.log(res.data);
-      console.log(res.data.users); // ✅ Axios gives you the data directly
+      // console.log(res.data);
+      // console.log(res.data.users); // ✅ Axios gives you the data directly
 
       setResults(res.data);
     } catch (err) {
