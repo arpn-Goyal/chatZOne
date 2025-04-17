@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import SearchUserModal from "./SearchUserModal";
 import axios from "axios";
+import {useNavigate} from "react-router-dom"
 
 const Sidebar = ({ onChatClick, activeChat }) => {
+  const navigate = useNavigate()
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [chatList, setChatList] = useState([]);
@@ -42,6 +44,20 @@ const Sidebar = ({ onChatClick, activeChat }) => {
       console.error("Error creating or getting chat", err);
     }
   };
+// 🧹 Logout Handler
+const handleLogout = async () => {
+  try {
+    await axios.post("http://localhost:5000/api/auth/logout", {}, {
+      withCredentials: true,
+    });
+
+   
+    // Redirect to login
+    navigate("/");
+  } catch (err) {
+    console.error("Logout failed", err);
+  }
+};
 
   // For search
   const filteredChats = chatList.filter((chat) =>
@@ -53,7 +69,12 @@ const Sidebar = ({ onChatClick, activeChat }) => {
   return (
     <div className="p-4 bg-white border-r h-full relative">
       <h2 className="text-lg font-semibold mb-4">Chats</h2>
-
+      <button
+          onClick={handleLogout}
+          className="text-sm text-red-600 hover:underline"
+        >
+          Logout
+        </button>
       <button
         className="w-full p-2 mb-3 bg-blue-500 text-white rounded"
         onClick={() => setShowModal(true)}

@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {useUser} from "../context/UserContext.jsx"
 
 const Login = () => {
   const navigate = useNavigate();
+  const {user , setUser} = useUser()
 
   const [formData, setFormData] = useState({
     email: "",
@@ -26,8 +28,9 @@ const Login = () => {
       );
       
       console.log(res);
-      console.log(res.data);
+      console.log(`main hu login = ${res.data}`);
       console.log(res.data.token)
+      setUser(res.data)
       navigate('/chat');
     } catch (error) {
       alert(error.response?.data?.message || "Something went wrong");

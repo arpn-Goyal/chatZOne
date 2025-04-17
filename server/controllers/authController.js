@@ -72,7 +72,10 @@ export const loginUser = async (req, res) => {
         });
         
         return res.status(200).json({
-            message: 'User Logged-in successfully'
+            message: 'User Logged-in successfully',
+            email: existingUser.email,
+            name: existingUser.name,
+            token:token
         });
 
     } catch (error) {
@@ -80,3 +83,22 @@ export const loginUser = async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 }
+
+export const logoutUser = async (req, res) => {
+    try {
+      // Clear the access token cookie
+      res.clearCookie("token", {
+        httpOnly: true,
+        sameSite: 'Lax',
+        secure: false, // true in production
+      });
+  
+      return res.status(200).json({ message: "Logged out successfully" });
+    } catch (error) {
+      console.error("Logout error:", error);
+      return res.status(500).json({ message: "Logout failed" });
+    }
+  };
+  
+
+  
