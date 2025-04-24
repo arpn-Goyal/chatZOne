@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import SearchUserModal from "./SearchUserModal";
 import axios from "axios";
 import {useNavigate} from "react-router-dom"
+import {useUser} from '../context/UserContext.jsx';
 
 const Sidebar = ({ onChatClick, activeChat }) => {
+  const {user} = useUser();
+
   const navigate = useNavigate()
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -69,6 +72,7 @@ const handleLogout = async () => {
   return (
     <div className="p-4 bg-white border-r h-full relative">
       <h2 className="text-lg font-semibold mb-4">Chats</h2>
+      <span>{user.email}</span>
       <button
           onClick={handleLogout}
           className="text-sm text-red-600 hover:underline"

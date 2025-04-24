@@ -26,11 +26,7 @@ const Login = () => {
         {email, password},
         { withCredentials: true }  // 🚀 Send & receive cookies!
       );
-      
-      console.log(res);
-      console.log(`main hu login = ${res.data}`);
-      console.log(res.data.token)
-      setUser(res.data)
+      setUser(res.data) ; // ✅ update user
       navigate('/chat');
     } catch (error) {
       alert(error.response?.data?.message || "Something went wrong");

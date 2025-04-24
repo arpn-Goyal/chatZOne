@@ -1,13 +1,46 @@
 // src/components/MessageInput.jsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useSocket } from "../context/socketContext.jsx";
+import { useUser } from "../context/UserContext.jsx";
+import axios from "axios";
 
-const MessageInput = () => {
-  const [message, setMessage] = useState('');
+const MessageInput = ({ selectedChat }) => {
+  const [message, setMessage] = useState("");
+  const { socket } = useSocket();
+  const { user } = useUser();
 
-  const sendMessage = () => {
-    if (!message.trim()) return;
-    console.log("Send message:", message);
-    setMessage('');
+  const sendMessage = async () => {
+    const trimmed = message.trim();
+    if (!trimmed || !selectedChat) return;
+
+    try {
+      // 1. Send to backend DB via REST
+      // const res = await axios.post(
+      //   `http://localhost:5000/api/message`, // Adjust base URL if needed
+      //   {
+      //     content: trimmed,
+      //     chatId: selectedChat._id,
+      //   },
+      //   { withCredentials: true } // important for cookies
+      // );
+
+      // const savedMessage = res.data;
+
+      // ✅ 2. Find receiver ID (the other person in chat)
+      const receiver = selectedChat.users.find((u) => u._id !== user._id);
+
+      // 3. Emit via socket
+      socket.emit("private message", {
+        toUserId: selectedChat.users.find((u) => u._id !== user._id)._id, // receiver
+        content: trimmed,
+        chatId: selectedChat._id,
+        senderId: user._id,
+      });
+
+      setMessage("");
+    } catch (err) {
+      console.error("Message sending failed:", err);
+    }
   };
 
   return (
