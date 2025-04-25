@@ -15,7 +15,7 @@ export const UserProvider = ({ children }) => {
         const res = await axios.get("http://localhost:5000/api/auth/me", {
           withCredentials: true,
         });
-        console.log(`UserContext -> useEffect  ${res.data.email}`)
+        console.log(`UserContext -> useEffect  ${res.data.id}`)
   
         setUser(res.data); // ✅ SET THE USER
       } catch (err) {

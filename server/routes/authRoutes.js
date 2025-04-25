@@ -9,7 +9,7 @@ router.post('/logout', logoutUser)
 
 // ✅ NEW: Authenticated user fetch route
 router.get('/me', verifyToken, (req, res) => {
- 
+  console.log(`authRoute : ${req.user}`)
     res.status(200).json(req.user); // user info comes from the middleware
   });
 

@@ -4,6 +4,10 @@ import User from "../models/User.mongodb.js";
 // Create or fetch 1-on-1 chat
 export const accessOrCreateChat = async (req, res) => {
   const { userId } = req.body;
+  const {loggedInUser } = req.body;
+
+console.log(`ChatController : logged In user ${loggedInUser}`)
+console.log(`ChatController : logged In user ${req.user}`)
 
   if (!userId) {
     console.log("UserId param not sent with request");
@@ -13,7 +17,7 @@ export const accessOrCreateChat = async (req, res) => {
   try {
     let chat = await Chat.findOne({
       isGroupChat: false,
-      users: { $all: [req.user._id, userId] },
+      users: { $all: [loggedInUser, userId] },
     })
       .populate("users", "-password")
       .populate("latestMessage");
@@ -23,7 +27,7 @@ export const accessOrCreateChat = async (req, res) => {
     // Create a new chat
     const newChat = await Chat.create({
       isGroupChat: false,
-      users: [req.user._id, userId],
+      users: [loggedInUser, userId],
     });
 
     const fullChat = await Chat.findById(newChat._id).populate("users", "-password");
@@ -35,17 +39,18 @@ export const accessOrCreateChat = async (req, res) => {
   }
 };
 
-// Fetch all chats for logged-in user
 export const fetchChats = async (req, res) => {
   try {
+    const loggedInUser = req.query.userId;
+
     const chats = await Chat.find({
-      users: { $in: [req.user._id] },
+      users: { $in: [loggedInUser] },
     })
       .populate("users", "-password")
       .populate("latestMessage")
       .sort({ updatedAt: -1 });
 
-      console.log(chats);
+    console.log(chats);
     res.status(200).json(chats);
   } catch (err) {
     console.error("Fetch Chats Error:", err);

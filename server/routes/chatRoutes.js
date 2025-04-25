@@ -5,7 +5,7 @@ import { accessOrCreateChat, fetchChats } from '../controllers/chatController.js
 const router = express.Router();
 
 router.post('/', verifyToken, accessOrCreateChat);
-router.get('/', verifyToken, fetchChats);
+router.get('/fetchChat', verifyToken, fetchChats);
 
 // router.get('/chat', verifyToken, (req, res) => {
 //   res.status(200).json({

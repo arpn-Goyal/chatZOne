@@ -16,24 +16,21 @@ const Sidebar = ({ onChatClick, activeChat }) => {
   useEffect(() => {
     const fetchChats = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/chat", {
-          withCredentials: true, // ✅ Include cookies
-        }); // 🔁 Replace with actual route
-        // console.log(res)
-        // console.log(res.data)
+        const res = await axios.get(`http://localhost:5000/api/fetchChat?userId=${user.id}`, {
+          withCredentials: true, // Include cookies
+        });
         setChatList(res.data);
       } catch (err) {
         console.error("Failed to fetch chats", err);
       }
     };
-
+  
     fetchChats();
   }, []);
-
   // From modal → create or open chat
-  const handleUserSelect = async (user) => {
+  const handleUserSelect = async (selectedUser) => {
     try {
-      const { data: newChat } = await axios.post("http://localhost:5000/api/chat", { userId: user._id }, { withCredentials: true });
+      const { data: newChat } = await axios.post("http://localhost:5000/api/chat", { userId: selectedUser._id , loggedInUser: user.id}, { withCredentials: true });
 
       // Avoid duplicates
       const alreadyExists = chatList.find((c) => c._id === newChat._id);
@@ -95,33 +92,33 @@ const handleLogout = async () => {
       />
 
       <ul className="space-y-2 overflow-y-auto max-h-[70vh]">
-        {filteredChats.length > 0 ? (
-          filteredChats.map((chat) => {
-            // console.log(chat);
-            const otherUser = chat.users.find((u) => u._id !== chat.loggedInUserId); // replace logic with actual user ID
+      {filteredChats.length > 0 ? (
+  filteredChats.map((chat) => {
+    const otherUser = chat.users.find((u) => u._id !== user.id);
 
-            return (
-              <li
-                key={chat._id}
-                onClick={() => onChatClick(chat)}
-                className={`flex items-center gap-3 p-2 rounded cursor-pointer 
-                  ${activeChat && activeChat._id === chat._id ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
-              >
-                <img
-                  src={
-                    otherUser.profilePic ||
-                    `https://ui-avatars.com/api/?name=${otherUser.name}`
-                  }
-                  alt="Profile"
-                  className="w-8 h-8 rounded-full object-cover"
-                />
-                <span>{otherUser.name}</span>
-              </li>
-            );
-          })
-        ) : (
-          <p className="text-sm text-gray-500">No chats found</p>
-        )}
+    return (
+      <li
+        key={chat._id}
+        onClick={() => onChatClick(chat)}
+        className={`flex items-center gap-3 p-2 rounded cursor-pointer 
+          ${activeChat && activeChat._id === chat._id ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
+      >
+        <img
+          src={
+            otherUser?.profilePic ||
+            `https://ui-avatars.com/api/?name=${otherUser?.name}`
+          }
+          alt="Profile"
+          className="w-8 h-8 rounded-full object-cover"
+        />
+        <span>{otherUser?.name}</span>
+      </li>
+    );
+  })
+) : (
+  <p className="text-sm text-gray-500">No chats found</p>
+)}
+
       </ul>
 
       {showModal && (
